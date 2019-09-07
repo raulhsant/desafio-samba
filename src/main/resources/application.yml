@@ -4,5 +4,14 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
-config:
+aws:
+  accessKeyId:
+  secretKey:
+  s3:
+    region: SA-EAST-1
+    bucket: io.sambatech.challenge
+
+
+general:
   allowed-content-types: "video/x-matroska"
+

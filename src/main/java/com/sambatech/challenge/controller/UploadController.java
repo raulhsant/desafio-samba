@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +17,7 @@ public class UploadController {
 
   @Autowired StorageService storageService;
 
-  @Value("${config.allowed-content-types}")
+  @Value("${general.allowed-content-types}")
   private Set<String> allowedContentTypes;
 
   /**
@@ -28,22 +29,21 @@ public class UploadController {
    * @return A string with the url to access the file.
    */
   @PostMapping(value = "/upload")
+  @ResponseBody
   public String handleUpload(@RequestBody MultipartFile file, HttpServletResponse response)
       throws Exception {
     if (file == null) {
-      response.sendError(400, "file cannot be null");
+      response.sendError(400, "file cannot be found on request");
       return null;
     }
 
-    // TODO: Send file to aws s3
     if (allowedContentTypes.contains(file.getContentType())) {
-      storageService.store(file);
+      storageService.sendToS3(file);
+      response.setStatus(201);
       return "Success!";
-    } else {
-      response.sendError(
-          415, String.format("Content type %s not supported", file.getContentType()));
     }
 
+    response.sendError(415, String.format("Content type %s not supported", file.getContentType()));
     return null;
   }
 }
