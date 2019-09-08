@@ -30,5 +30,12 @@ aws:
 
 
 general:
-  allowed-content-types: "video/x-matroska"
+  allowed-content-types: video/x-matroska
+
+bitmovin:
+  apiKey:
+  inputId:
+  outputId:
+  videoCodecConfigId:
+  audioCodecConfigId: 
 

@@ -38,10 +38,10 @@ public class StorageService {
     Upload upload = tm.upload(request);
 
     try {
+      uploadedFile.setStatus(UploadedFile.STATUS.IN_PROGRESS);
       LOGGER.info("Uploading file {} to S3 bucket!", uploadedFile.getPath().toString());
       upload.waitForCompletion();
       LOGGER.info("Upload {} to S3 bucket completed!", uploadedFile.getPath().toString());
-      uploadedFile.setStatus(UploadedFile.STATUS.SUCCESS);
       FileUtils.deleteQuietly(uploadedFile.getFile());
     } catch (AmazonClientException e) {
       uploadedFile.setStatus(UploadedFile.STATUS.FAILED);

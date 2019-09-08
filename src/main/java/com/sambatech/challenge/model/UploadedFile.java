@@ -29,6 +29,9 @@ public class UploadedFile {
   @Column(name = "status")
   private STATUS status = STATUS.IN_PROGRESS;
 
+  @Column(name = "exception")
+  private String exception;
+
   @Transient private Path path;
 
   @Transient private File file;
@@ -85,9 +88,16 @@ public class UploadedFile {
     return status;
   }
 
-  public UploadedFile setStatus(STATUS status) {
+  public void setStatus(STATUS status) {
     this.status = status;
-    return this;
+  }
+
+  public String getException() {
+    return exception;
+  }
+
+  public void setException(String exception) {
+    this.exception = exception;
   }
 
   @Override

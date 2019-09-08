@@ -3,6 +3,7 @@ package com.sambatech.challenge.controller;
 import com.sambatech.challenge.model.UploadedFile;
 import com.sambatech.challenge.service.StorageService;
 import com.sambatech.challenge.service.UploadedFileService;
+import com.sambatech.challenge.service.bitmovin.BitmovinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,16 +19,16 @@ import java.util.Set;
 public class UploadController {
 
   @Autowired StorageService storageService;
-
   @Autowired UploadedFileService uploadedFileService;
+  @Autowired BitmovinService bitmovinService;
 
   @Value("${general.allowed-content-types}")
   private Set<String> allowedContentTypes;
 
-  // TODO: Create stream
-  // TODO: Create muxing
-  // TODO: encode
+  //TODO: get stream link to play the encoded video
 
+  // TODO: prepare production
+  // TODO: implement some tests
   /**
    * This method handles the upload of a video file. As the application only needs to handle .mkv
    * files, the file format if checked in this controller.
@@ -48,7 +49,18 @@ public class UploadController {
     if (allowedContentTypes.contains(file.getContentType())) {
       UploadedFile uploadedFile = uploadedFileService.buildUploadFile(file);
       storageService.sendToS3(uploadedFile);
-      uploadedFileService.save(uploadedFile);
+
+      try {
+        bitmovinService.encode(uploadedFile);
+        uploadedFile.setStatus(UploadedFile.STATUS.SUCCESS);
+        uploadedFileService.save(uploadedFile);
+      } catch (Exception e){
+        uploadedFile.setStatus(UploadedFile.STATUS.FAILED);
+        uploadedFile.setException(e.getMessage());
+        uploadedFileService.save(uploadedFile);
+        response.setStatus(500, e.getMessage());
+        return null;
+      }
       response.setStatus(201);
       return "Success!";
     }
