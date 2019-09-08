@@ -1,6 +1,8 @@
 package com.sambatech.challenge.controller;
 
+import com.sambatech.challenge.model.UploadedFile;
 import com.sambatech.challenge.service.StorageService;
+import com.sambatech.challenge.service.UploadedFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,8 +19,14 @@ public class UploadController {
 
   @Autowired StorageService storageService;
 
+  @Autowired UploadedFileService uploadedFileService;
+
   @Value("${general.allowed-content-types}")
   private Set<String> allowedContentTypes;
+
+  // TODO: Create stream
+  // TODO: Create muxing
+  // TODO: encode
 
   /**
    * This method handles the upload of a video file. As the application only needs to handle .mkv
@@ -38,7 +46,9 @@ public class UploadController {
     }
 
     if (allowedContentTypes.contains(file.getContentType())) {
-      storageService.sendToS3(file);
+      UploadedFile uploadedFile = uploadedFileService.buildUploadFile(file);
+      storageService.sendToS3(uploadedFile);
+      uploadedFileService.save(uploadedFile);
       response.setStatus(201);
       return "Success!";
     }
