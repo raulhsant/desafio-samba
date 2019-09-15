@@ -80,6 +80,7 @@ public class BitmovinService {
     DashRepresentationRequestDTO audioRepresentationDTO = mountAudioRepresentationDTO(uploadedFile, encodingId, audioMuxingResponse);
 
     createDashRepresentation(apiService, manifestResponseDTO, dashPeriodResponseDTO, dashVideoAdaptation, videoRepresentationDTO);
+    createDashRepresentation(apiService, manifestResponseDTO, dashPeriodResponseDTO, dashAudioAdaptation, audioRepresentationDTO);
 
     GenericResponseDTO encodingStartResponse = startEncoding(apiService, encodingId, manifestResponseDTO);
 
@@ -90,7 +91,7 @@ public class BitmovinService {
     DashRepresentationRequestDTO result = new DashRepresentationRequestDTO();
     result.setEncodingId(encodingId);
     result.setMuxingId(videoMuxingResponse.getData().getResult().getId());
-    result.setSegmentPath("output/"+uploadedFile.getUid()+"/h264/1024_1500000/fmp4");
+    result.setSegmentPath("h264/1024_1500000/fmp4");
     return result;
   }
 
@@ -98,7 +99,7 @@ public class BitmovinService {
     DashRepresentationRequestDTO result = new DashRepresentationRequestDTO();
     result.setEncodingId(encodingId);
     result.setMuxingId(audioMuxingResponse.getData().getResult().getId());
-    result.setSegmentPath("output/"+uploadedFile.getUid()+"/aac/128000/fmp4");
+    result.setSegmentPath("aac/128000/fmp4");
     return result;
   }
 
