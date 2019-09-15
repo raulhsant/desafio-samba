@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,5 +41,9 @@ public class UploadedFileService {
 
   public void save(UploadedFile uploadedFile) {
     uploadedFileDAO.insert(uploadedFile);
+  }
+
+  public Optional<UploadedFile> getByUid(String uid){
+    return uploadedFileDAO.getByUid(uid);
   }
 }

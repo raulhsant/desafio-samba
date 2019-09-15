@@ -32,6 +32,9 @@ public class UploadedFile {
   @Column(name = "exception")
   private String exception;
 
+  @Column(name = "encoding_id" )
+  private String encodingId;
+
   @Transient private Path path;
 
   @Transient private File file;
@@ -100,21 +103,33 @@ public class UploadedFile {
     this.exception = exception;
   }
 
+  public String getEncodingId() {
+    return encodingId;
+  }
+
+  public void setEncodingId(String encodingId) {
+    this.encodingId = encodingId;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     UploadedFile that = (UploadedFile) o;
-    return Objects.equals(id, that.id)
-        && Objects.equals(uid, that.uid)
-        && Objects.equals(createdAt, that.createdAt)
-        && Objects.equals(name, that.name)
-        && Objects.equals(status, that.status);
+    return Objects.equals(id, that.id) &&
+        Objects.equals(uid, that.uid) &&
+        Objects.equals(createdAt, that.createdAt) &&
+        Objects.equals(name, that.name) &&
+        status == that.status &&
+        Objects.equals(exception, that.exception) &&
+        Objects.equals(encodingId, that.encodingId) &&
+        Objects.equals(path, that.path) &&
+        Objects.equals(file, that.file);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, uid, createdAt, name, status);
+    return Objects.hash(id, uid, createdAt, name, status, exception, encodingId, path, file);
   }
 
   public UploadedFile() {
