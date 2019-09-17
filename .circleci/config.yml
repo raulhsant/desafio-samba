@@ -1,0 +1,48 @@
+# Java Maven CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+
+    steps:
+      - checkout
+
+      - run:
+          command: |
+            sudo apt-get update && sudo apt-get install -y python-pip libpython-dev
+            sudo pip --version
+            sudo pip install awscli --upgrade
+            aws --version
+          name: Install AWS Client
+
+      - setup_remote_docker
+
+      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
+          key: samba-challenge-{{ checksum "pom.xml" }}
+
+      - run: mvn dependency:go-offline
+
+      - save_cache: # saves the project dependencies
+          paths:
+            - ~/.m2
+          key: samba-challenge-{{ checksum "pom.xml" }}
+
+      - run:
+          name: Build image
+          command: |
+            mvn install dockerfile:build
+
+      - deploy:
+          name: Push application Docker image
+          command: |
+            eval $(aws ecr get-login --region us-east-1 --no-include-email)
+            docker push
+            docker tag samba-challenge:latest raulhsant/samba-challenge:latest
+            docker tag samba-challenge:latest raulhsant/samba-challenge:$CIRCLE_SHA1
+            docker push raulhsant/samba-challenge::latest
