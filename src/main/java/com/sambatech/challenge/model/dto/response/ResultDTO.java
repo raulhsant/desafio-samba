@@ -41,9 +41,9 @@ public class ResultDTO {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     ResultDTO resultDTO = (ResultDTO) o;
-    return Objects.equals(id, resultDTO.id) &&
-        Objects.equals(name, resultDTO.name) &&
-        Objects.equals(status, resultDTO.status);
+    return Objects.equals(id, resultDTO.id)
+        && Objects.equals(name, resultDTO.name)
+        && Objects.equals(status, resultDTO.status);
   }
 
   @Override

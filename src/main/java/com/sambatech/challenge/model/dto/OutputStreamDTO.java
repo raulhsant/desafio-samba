@@ -44,7 +44,7 @@ public class OutputStreamDTO {
     this.acl.add(new AclDTO());
   }
 
-  //TODO: Remove inner class and harcoded  permission setting
+  // TODO: Remove inner class and harcoded  permission setting
   private class AclDTO {
     private String permission = "PUBLIC_READ";
 

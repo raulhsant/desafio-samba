@@ -43,7 +43,7 @@ public class UploadedFileService {
     uploadedFileDAO.insert(uploadedFile);
   }
 
-  public Optional<UploadedFile> getByUid(String uid){
+  public Optional<UploadedFile> getByUid(String uid) {
     return uploadedFileDAO.getByUid(uid);
   }
 }

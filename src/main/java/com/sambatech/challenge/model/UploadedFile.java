@@ -32,7 +32,7 @@ public class UploadedFile {
   @Column(name = "exception")
   private String exception;
 
-  @Column(name = "encoding_id" )
+  @Column(name = "encoding_id")
   private String encodingId;
 
   @Transient private Path path;
@@ -116,15 +116,15 @@ public class UploadedFile {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     UploadedFile that = (UploadedFile) o;
-    return Objects.equals(id, that.id) &&
-        Objects.equals(uid, that.uid) &&
-        Objects.equals(createdAt, that.createdAt) &&
-        Objects.equals(name, that.name) &&
-        status == that.status &&
-        Objects.equals(exception, that.exception) &&
-        Objects.equals(encodingId, that.encodingId) &&
-        Objects.equals(path, that.path) &&
-        Objects.equals(file, that.file);
+    return Objects.equals(id, that.id)
+        && Objects.equals(uid, that.uid)
+        && Objects.equals(createdAt, that.createdAt)
+        && Objects.equals(name, that.name)
+        && status == that.status
+        && Objects.equals(exception, that.exception)
+        && Objects.equals(encodingId, that.encodingId)
+        && Objects.equals(path, that.path)
+        && Objects.equals(file, that.file);
   }
 
   @Override

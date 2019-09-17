@@ -15,13 +15,15 @@ public class UploadedFileDAO extends GenericDAO<UploadedFile> {
     setClazz(UploadedFile.class);
   }
 
-  public Optional<UploadedFile> getByUid(String strUid){
+  public Optional<UploadedFile> getByUid(String strUid) {
     UUID uid = UUID.fromString(strUid);
     String queryString = "from " + " UploadedFile where uid =: UID";
-    TypedQuery<UploadedFile> query = entityManager.createQuery("SELECT uf FROM UploadedFile uf WHERE uf.uid = :UID", UploadedFile.class);
+    TypedQuery<UploadedFile> query =
+        entityManager.createQuery(
+            "SELECT uf FROM UploadedFile uf WHERE uf.uid = :UID", UploadedFile.class);
     query.setParameter("UID", uid);
 
-    try{
+    try {
       return Optional.of(query.getSingleResult());
     } catch (NoResultException e) {
       return Optional.empty();

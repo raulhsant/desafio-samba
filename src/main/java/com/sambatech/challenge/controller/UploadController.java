@@ -51,8 +51,11 @@ public class UploadController {
    */
   @PostMapping
   @ResponseBody
-  @ApiOperation("Start file encoding. Returns information about the encoding and the file uid on the system.")
-  public String handleUpload(@ApiParam("File to be encoded.") @RequestBody MultipartFile file, HttpServletResponse response)
+  @ApiOperation(
+      "Start file encoding. Returns information about the encoding and the file uid on the system.")
+  public String handleUpload(
+      @ApiParam("File to be encoded.") @RequestBody MultipartFile file,
+      HttpServletResponse response)
       throws Exception {
     if (file == null) {
       response.sendError(400, "file cannot be found on request");

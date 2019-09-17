@@ -26,24 +26,29 @@ public class EncodedController {
 
     Optional<UploadedFile> uploadedOptional = uploadedFileService.getByUid(uploadedUid);
 
-    if(uploadedOptional.isEmpty()){
-      String errorMessage =  String.format("The video with uid %s cannot be found!", uploadedUid);
+    if (uploadedOptional.isEmpty()) {
+      String errorMessage = String.format("The video with uid %s cannot be found!", uploadedUid);
       model.addAttribute("errorMessage", errorMessage);
       return "error";
     }
 
-    String encodingStatus = bitmovinService.getEncodingStatus(uploadedOptional.get().getEncodingId());
+    String encodingStatus =
+        bitmovinService.getEncodingStatus(uploadedOptional.get().getEncodingId());
 
-    if(encodingStatus != null && encodingStatus.equals("FINISHED")){
-      model.addAttribute("manifestUrl", "https://s3.sa-east-1.amazonaws.com/io.sambatech.challenge/output/" + uploadedOptional.get().getUid() + "/manifest.mpd");
+    if (encodingStatus != null && encodingStatus.equals("FINISHED")) {
+      model.addAttribute(
+          "manifestUrl",
+          "https://s3.sa-east-1.amazonaws.com/io.sambatech.challenge/output/"
+              + uploadedOptional.get().getUid()
+              + "/manifest.mpd");
       return "player";
     }
 
-    String errorMessage =  String.format("The encoding of the video with uid %s isn't finished yet. Please try again in a few minutes.", uploadedUid);
+    String errorMessage =
+        String.format(
+            "The encoding of the video with uid %s isn't finished yet. Please try again in a few minutes.",
+            uploadedUid);
     model.addAttribute("errorMessage", errorMessage);
     return "error";
   }
-
-
-
 }

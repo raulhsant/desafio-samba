@@ -73,21 +73,37 @@ public class BitmovinService {
 
     GenericResponseDTO manifestResponseDTO = createManifest(apiService, uploadedFile);
     GenericResponseDTO dashPeriodResponseDTO = createDashPeriod(apiService, manifestResponseDTO);
-    GenericResponseDTO dashAudioAdaptation = createDashAudioAdaptationSet(apiService, manifestResponseDTO, dashPeriodResponseDTO);
-    GenericResponseDTO dashVideoAdaptation = createDashVideoAdaptationSet(apiService, manifestResponseDTO, dashPeriodResponseDTO);
+    GenericResponseDTO dashAudioAdaptation =
+        createDashAudioAdaptationSet(apiService, manifestResponseDTO, dashPeriodResponseDTO);
+    GenericResponseDTO dashVideoAdaptation =
+        createDashVideoAdaptationSet(apiService, manifestResponseDTO, dashPeriodResponseDTO);
 
-    DashRepresentationRequestDTO videoRepresentationDTO = mountVideoRepresentationDTO(uploadedFile, encodingId, videoMuxingResponse);
-    DashRepresentationRequestDTO audioRepresentationDTO = mountAudioRepresentationDTO(uploadedFile, encodingId, audioMuxingResponse);
+    DashRepresentationRequestDTO videoRepresentationDTO =
+        mountVideoRepresentationDTO(uploadedFile, encodingId, videoMuxingResponse);
+    DashRepresentationRequestDTO audioRepresentationDTO =
+        mountAudioRepresentationDTO(uploadedFile, encodingId, audioMuxingResponse);
 
-    createDashRepresentation(apiService, manifestResponseDTO, dashPeriodResponseDTO, dashVideoAdaptation, videoRepresentationDTO);
-    createDashRepresentation(apiService, manifestResponseDTO, dashPeriodResponseDTO, dashAudioAdaptation, audioRepresentationDTO);
+    createDashRepresentation(
+        apiService,
+        manifestResponseDTO,
+        dashPeriodResponseDTO,
+        dashVideoAdaptation,
+        videoRepresentationDTO);
+    createDashRepresentation(
+        apiService,
+        manifestResponseDTO,
+        dashPeriodResponseDTO,
+        dashAudioAdaptation,
+        audioRepresentationDTO);
 
-    GenericResponseDTO encodingStartResponse = startEncoding(apiService, encodingId, manifestResponseDTO);
+    GenericResponseDTO encodingStartResponse =
+        startEncoding(apiService, encodingId, manifestResponseDTO);
 
     uploadedFile.setEncodingId(encodingId);
   }
 
-  private DashRepresentationRequestDTO mountVideoRepresentationDTO(UploadedFile uploadedFile, String encodingId, GenericResponseDTO videoMuxingResponse) {
+  private DashRepresentationRequestDTO mountVideoRepresentationDTO(
+      UploadedFile uploadedFile, String encodingId, GenericResponseDTO videoMuxingResponse) {
     DashRepresentationRequestDTO result = new DashRepresentationRequestDTO();
     result.setEncodingId(encodingId);
     result.setMuxingId(videoMuxingResponse.getData().getResult().getId());
@@ -95,7 +111,8 @@ public class BitmovinService {
     return result;
   }
 
-  private DashRepresentationRequestDTO mountAudioRepresentationDTO(UploadedFile uploadedFile, String encodingId, GenericResponseDTO audioMuxingResponse) {
+  private DashRepresentationRequestDTO mountAudioRepresentationDTO(
+      UploadedFile uploadedFile, String encodingId, GenericResponseDTO audioMuxingResponse) {
     DashRepresentationRequestDTO result = new DashRepresentationRequestDTO();
     result.setEncodingId(encodingId);
     result.setMuxingId(audioMuxingResponse.getData().getResult().getId());
@@ -103,14 +120,22 @@ public class BitmovinService {
     return result;
   }
 
-  private void createDashRepresentation(BitmovinAPIService apiService, GenericResponseDTO manifestResponseDTO, GenericResponseDTO periodResponseDTO, GenericResponseDTO adaptation, DashRepresentationRequestDTO representationDTO) throws Exception {
+  private void createDashRepresentation(
+      BitmovinAPIService apiService,
+      GenericResponseDTO manifestResponseDTO,
+      GenericResponseDTO periodResponseDTO,
+      GenericResponseDTO adaptation,
+      DashRepresentationRequestDTO representationDTO)
+      throws Exception {
     String manifestId = manifestResponseDTO.getData().getResult().getId();
     String periodId = periodResponseDTO.getData().getResult().getId();
     String adaptationId = adaptation.getData().getResult().getId();
 
     try {
       Response<GenericResponseDTO> response =
-          apiService.createDashRepresentation(manifestId, periodId, adaptationId, representationDTO).execute();
+          apiService
+              .createDashRepresentation(manifestId, periodId, adaptationId, representationDTO)
+              .execute();
 
       if (response.isSuccessful()) {
         return;
@@ -119,7 +144,11 @@ public class BitmovinService {
       throw new Exception(
           String.format(
               "Unable to create Dash Representation for manifest %s, period %s, adaptation %s with code %d | %s",
-              manifestId, periodId, adaptationId, response.code(), new String(response.errorBody().bytes())));
+              manifestId,
+              periodId,
+              adaptationId,
+              response.code(),
+              new String(response.errorBody().bytes())));
 
     } catch (IOException e) {
       throw new Exception(
@@ -130,12 +159,18 @@ public class BitmovinService {
   }
 
   private GenericResponseDTO createDashVideoAdaptationSet(
-      BitmovinAPIService apiService, GenericResponseDTO manifestResponseDTO, GenericResponseDTO periodResponseDTO) throws Exception {
+      BitmovinAPIService apiService,
+      GenericResponseDTO manifestResponseDTO,
+      GenericResponseDTO periodResponseDTO)
+      throws Exception {
     String manifestId = manifestResponseDTO.getData().getResult().getId();
     String periodId = periodResponseDTO.getData().getResult().getId();
     try {
       Response<GenericResponseDTO> response =
-          apiService.createDashVideoAdaptationSet(manifestId, periodId, new JsonParser().parse("{}").getAsJsonObject()).execute();
+          apiService
+              .createDashVideoAdaptationSet(
+                  manifestId, periodId, new JsonParser().parse("{}").getAsJsonObject())
+              .execute();
 
       if (response.isSuccessful()) {
         return response.body();
@@ -155,13 +190,19 @@ public class BitmovinService {
   }
 
   private GenericResponseDTO createDashAudioAdaptationSet(
-      BitmovinAPIService apiService, GenericResponseDTO manifestResponseDTO, GenericResponseDTO periodResponseDTO) throws Exception {
+      BitmovinAPIService apiService,
+      GenericResponseDTO manifestResponseDTO,
+      GenericResponseDTO periodResponseDTO)
+      throws Exception {
     String manifestId = manifestResponseDTO.getData().getResult().getId();
     String periodId = periodResponseDTO.getData().getResult().getId();
     try {
       Response<GenericResponseDTO> response =
           apiService
-              .createDashAudioAdaptationSet(manifestId, periodId, new JsonParser().parse("{\"lang\": \"en\"}").getAsJsonObject())
+              .createDashAudioAdaptationSet(
+                  manifestId,
+                  periodId,
+                  new JsonParser().parse("{\"lang\": \"en\"}").getAsJsonObject())
               .execute();
 
       if (response.isSuccessful()) {
@@ -181,12 +222,14 @@ public class BitmovinService {
     }
   }
 
-  private GenericResponseDTO createDashPeriod(BitmovinAPIService apiService, GenericResponseDTO manifestResponseDTO)
-      throws Exception {
+  private GenericResponseDTO createDashPeriod(
+      BitmovinAPIService apiService, GenericResponseDTO manifestResponseDTO) throws Exception {
     String manifestId = manifestResponseDTO.getData().getResult().getId();
     try {
       Response<GenericResponseDTO> response =
-          apiService.createDashPeriod(manifestId, new JsonParser().parse("{}").getAsJsonObject()).execute();
+          apiService
+              .createDashPeriod(manifestId, new JsonParser().parse("{}").getAsJsonObject())
+              .execute();
 
       if (response.isSuccessful()) {
         return response.body();
@@ -231,10 +274,11 @@ public class BitmovinService {
     }
   }
 
-  private GenericResponseDTO getStatus(BitmovinAPIService apiService,String encodingId) throws Exception {
-    try{
+  private GenericResponseDTO getStatus(BitmovinAPIService apiService, String encodingId)
+      throws Exception {
+    try {
       Response<GenericResponseDTO> response = apiService.encodingStatus(encodingId).execute();
-      if(response.isSuccessful()){
+      if (response.isSuccessful()) {
         return response.body();
       }
 
@@ -244,7 +288,8 @@ public class BitmovinService {
               encodingId, response.code(), new String(response.errorBody().bytes())));
 
     } catch (IOException e) {
-      throw new Exception(String.format("Unable check Encoding %s status error %s", encodingId, e.getMessage()));
+      throw new Exception(
+          String.format("Unable check Encoding %s status error %s", encodingId, e.getMessage()));
     }
   }
 
@@ -378,13 +423,20 @@ public class BitmovinService {
     }
   }
 
-  private GenericResponseDTO startEncoding(BitmovinAPIService apiService, String encodingId, GenericResponseDTO manifestResponseDTO)
+  private GenericResponseDTO startEncoding(
+      BitmovinAPIService apiService, String encodingId, GenericResponseDTO manifestResponseDTO)
       throws Exception {
 
     String manifestId = manifestResponseDTO.getData().getResult().getId();
-    String requestBody = String.format("{\"vodDashManifests\":[{\"manifestId\":\"%s\"}],\"encodingMode\":\"SINGLE_PASS\"}", manifestId);
+    String requestBody =
+        String.format(
+            "{\"vodDashManifests\":[{\"manifestId\":\"%s\"}],\"encodingMode\":\"SINGLE_PASS\"}",
+            manifestId);
     try {
-      Response<GenericResponseDTO> response = apiService.startEncoding(encodingId, new JsonParser().parse(requestBody).getAsJsonObject()).execute();
+      Response<GenericResponseDTO> response =
+          apiService
+              .startEncoding(encodingId, new JsonParser().parse(requestBody).getAsJsonObject())
+              .execute();
 
       if (response.isSuccessful()) {
         return response.body();
