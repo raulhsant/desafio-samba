@@ -35,9 +35,9 @@ general:
   allowed-content-types: video/x-matroska
 
 bitmovin:
-  apiKey:
-  inputId:
-  outputId:
-  videoCodecConfigId:
-  audioCodecConfigId: 
+  apiKey: 8dae2340-ed91-41e4-802a-3eee8a836163
+  inputId: 56740C7C-F938-4436-B1F6-20243590EECF
+  outputId: fae110fd-7c68-45a3-be21-b03031de1e72
+  videoCodecConfigId: 64d5e324-caaf-4ce8-8289-a6d8e7edce40
+  audioCodecConfigId: eedb299c-929f-4185-85c7-06cee78f1223
 

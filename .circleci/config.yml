@@ -33,7 +33,7 @@ jobs:
       - deploy:
           name: Push application Docker image
           command: |
-            eval $(aws ecr get-login --region us-east-1 --no-include-email)
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker tag raulhsant/challenge:latest raulhsant/samba-challenge:latest
             docker tag raulhsant/challenge:latest raulhsant/samba-challenge:$CIRCLE_SHA1
             docker push raulhsant/samba-challenge:latest
