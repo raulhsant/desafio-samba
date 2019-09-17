@@ -1,9 +1,6 @@
 package com.sambatech.challenge.controller;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.sambatech.challenge.model.UploadedFile;
-import com.sambatech.challenge.model.dto.SimpleUploadedFileDTO;
 import com.sambatech.challenge.service.StorageService;
 import com.sambatech.challenge.service.UploadedFileService;
 import com.sambatech.challenge.service.bitmovin.BitmovinService;
@@ -27,9 +24,12 @@ import java.util.Set;
 @Api(description = "Set of endpoints for Uploading a file to be encoded")
 public class UploadController {
 
-  @Autowired StorageService storageService;
-  @Autowired UploadedFileService uploadedFileService;
-  @Autowired BitmovinService bitmovinService;
+  @Autowired
+  StorageService storageService;
+  @Autowired
+  UploadedFileService uploadedFileService;
+  @Autowired
+  BitmovinService bitmovinService;
 
   @Value("${general.allowed-content-types}")
   private Set<String> allowedContentTypes;
@@ -41,11 +41,12 @@ public class UploadController {
 
   // TODO: prepare production
   // TODO: implement some tests
+
   /**
    * This method handles the upload of a video file. As the application only needs to handle .mkv
    * files, the file format if checked in this controller.
    *
-   * @param file A multipart or a .mkv file
+   * @param file     A multipart or a .mkv file
    * @param response
    * @return A string with the url to access the file.
    */
