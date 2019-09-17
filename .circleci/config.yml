@@ -13,14 +13,6 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          command: |
-            sudo apt-get update && sudo apt-get install -y python-pip libpython-dev
-            sudo pip --version
-            sudo pip install awscli --upgrade
-            aws --version
-          name: Install AWS Client
-
       - setup_remote_docker
 
       - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
@@ -43,6 +35,6 @@ jobs:
           command: |
             eval $(aws ecr get-login --region us-east-1 --no-include-email)
             docker push
-            docker tag samba-challenge:latest raulhsant/samba-challenge:latest
-            docker tag samba-challenge:latest raulhsant/samba-challenge:$CIRCLE_SHA1
+            docker tag raulhsant/challenge:latest raulhsant/samba-challenge:latest
+            docker tag raulhsant/challenge:latest raulhsant/samba-challenge:$CIRCLE_SHA1
             docker push raulhsant/samba-challenge::latest
